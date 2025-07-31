@@ -12,13 +12,20 @@ const app = express();
 
 app.use(express.json());
 
-const corsOptions = {
-  origin: 'https://e-commerce-frontend-gray-eight.vercel.app/', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
-};
+const allowedOrigins = ['https://e-commerce-frontend-gray-eight.vercel.app'];
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function(origin, callback){
+    // Allow requests with no origin (like mobile apps or curl)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+}));
 
 // Routes
 app.use('/api/users', require('./routes/authRoutes'));
