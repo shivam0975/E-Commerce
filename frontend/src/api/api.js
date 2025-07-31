@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://e-commerce-backend-phi-three.vercel.app/api',
+  baseURL: 'http://localhost:8080/api',
 });
 
 // Add token to headers
