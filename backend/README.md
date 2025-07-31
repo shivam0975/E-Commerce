@@ -25,7 +25,7 @@ backend
 ## Setup Instructions
 1. Clone the repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/shivam0975/E-Commerce/tree/main/backend
    ```
 2. Navigate to the project directory:
    ```
