@@ -13,17 +13,9 @@ const app = express();
 app.use(express.json());
 
 // Configure CORS for your frontend URL only
-const allowedOrigins = ['https://e-commerce-frontend-gray-eight.vercel.app'];
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow non-browser requests like Postman
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true,
+  origin: 'https://e-commerce-frontend-gray-eight.vercel.app', // Or use "*" to allow all, but it's less secure
+  credentials: true // if you use cookies/auth
 }));
 
 // API routes
