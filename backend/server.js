@@ -11,7 +11,14 @@ connectDB();
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+  origin: 'https://e-commerce-frontend-gray-eight.vercel.app/', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Routes
 app.use('/api/users', require('./routes/authRoutes'));
