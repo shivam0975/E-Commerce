@@ -13,7 +13,18 @@ const app = express();
 app.use(express.json());
 
 // CORS - simpler setup for serverless, allow all origins or customize as needed
-app.use(cors());
+const allowedOrigins = ['https://e-commerce-frontend-gray-eight.vercel.app'];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman or curl
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('Not allowed by CORS'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+}));
 
 // API routes
 app.use('/api/users', require('../routes/authRoutes'));
