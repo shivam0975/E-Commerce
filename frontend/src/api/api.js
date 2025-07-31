@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://e-commerce-backend-seven-teal.vercel.app',
+  baseURL: 'https://e-commerce-backend-phi-three.vercel.app/api',
 });
 
 // Add token to headers
