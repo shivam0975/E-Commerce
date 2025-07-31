@@ -25,16 +25,9 @@ app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 
 // Serve frontend static assets in production (optional if serving from same server)
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-  app.get('*', (req, res) => 
-    res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'))
-  );
-} else {
   app.get('/', (req, res) => {
     res.send('API is running...');
   });
-}
 
 // Error handling middleware
 app.use(notFound);
