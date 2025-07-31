@@ -1,47 +1,42 @@
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
-const connectDB = require('../config/db');
+const connectDB = require('./config/db');
 const cors = require('cors');
 const serverless = require('serverless-http');
-const { notFound, errorHandler } = require('../middleware/errorMiddleware');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
+
+// Connect to MongoDB
 connectDB();
 
 const app = express();
+
 app.use(express.json());
 
-// CORS - simpler setup for serverless, allow all origins or customize as needed
-
-// Configure CORS for your frontend URL only
-app.use(cors({
-  origin: 'https://e-commerce-frontend-gray-eight.vercel.app', // Or use "*" to allow all, but it's less secure
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true // if you use cookies/auth
-}));
+// CORS config allowing your frontend only
+app.use(
+  cors({
+    origin: 'https://e-commerce-frontend-gray-eight.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  })
+);
 
 // API routes
-app.use('/api/users', require('../routes/authRoutes'));
-app.use('/api/products', require('../routes/productRoutes'));
-app.use('/api/orders', require('../routes/orderRoutes'));
+app.use('/api/users', require('./routes/authRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
 
-// (Optional) Serve frontend static in production if combined in deployment
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../frontend/build')));
-  app.get('*', (req, res) => 
-    res.sendFile(path.resolve(__dirname, '../../frontend', 'build', 'index.html'))
-  );
-} else {
-  app.get('/', (req, res) => {
-    res.send('API is running...');
-  });
-}
+// Root endpoint to verify serverless backend is running
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
 
-// Error handling middleware
+// Middleware for 404 and general error handling
 app.use(notFound);
 app.use(errorHandler);
 
-// Export handler for serverless function on Vercel
-module.exports = app;
+// Export handler for Vercel serverless function
 module.exports.handler = serverless(app);
