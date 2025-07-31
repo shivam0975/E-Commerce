@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const connectDB = require('../config/db');
 const cors = require('cors');
 const serverless = require('serverless-http');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
@@ -27,9 +27,9 @@ app.use(
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // API routes
-app.use('/api/users', require('./routes/authRoutes'));
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/users', require('../routes/authRoutes'));
+app.use('/api/products', require('../routes/productRoutes'));
+app.use('/api/orders', require('../routes/orderRoutes'));
 
 // Root endpoint to verify serverless backend is running
 app.get('/', (req, res) => {
