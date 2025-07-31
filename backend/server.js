@@ -15,6 +15,7 @@ app.use(express.json());
 // Configure CORS for your frontend URL only
 app.use(cors({
   origin: 'https://e-commerce-frontend-gray-eight.vercel.app', // Or use "*" to allow all, but it's less secure
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true // if you use cookies/auth
 }));
 
