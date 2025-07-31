@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
-import connectDB from './config/db.js';
+const connectDB = require('./config/db');
 const cors = require('cors');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
