@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('../config/db');
 const cors = require('cors');
 const serverless = require('serverless-http');
-const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const { notFound, errorHandler } = require('../middleware/errorMiddleware');
 
 dotenv.config();
 
