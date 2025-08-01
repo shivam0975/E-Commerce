@@ -8,12 +8,22 @@ const { notFound, errorHandler } = require('../middleware/errorMiddleware');
 
 dotenv.config();
 
+// Vercel config to allow longer runtime
+export const config = {
+  maxDuration: 300,
+};
 
 const app = express();
 
-app.use(express.json());
+// Connect DB immediately
+connectDB().then(() => {
+  console.log('MongoDB connected');
+}).catch((err) => {
+  console.error('MongoDB connection failed:', err);
+});
 
-// CORS config allowing your frontend only
+// Middlewares
+app.use(express.json());
 app.use(
   cors({
     origin: 'https://e-commerce-frontend-gray-eight.vercel.app',
@@ -24,32 +34,15 @@ app.use(
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-// API routes
+// Routes
 app.use('/api/users', require('../routes/authRoutes'));
 app.use('/api/products', require('../routes/productRoutes'));
 app.use('/api/orders', require('../routes/orderRoutes'));
+app.get('/', (req, res) => res.send('API is running...'));
 
-// Root endpoint to verify serverless backend is running
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
-
-// Middleware for 404 and general error handling
+// Error handlers
 app.use(notFound);
 app.use(errorHandler);
 
-let isConnected = false;
-
-const startApp = async () => {
-  if (!isConnected) {
-    await connectDB();
-    isConnected = true;
-    console.log('MongoDB connected');
-  }
-  return serverless(app);
-};
-
-module.exports = async (req, res) => {
-  const handler = await startApp();
-  return handler(req, res);
-};
+// Export serverless handler directly
+module.exports = serverless(app);
