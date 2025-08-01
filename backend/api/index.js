@@ -1,19 +1,15 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import cors from 'cors';
-import serverless from 'serverless-http';
-import connectDB from '../config/db.js';
-import { notFound, errorHandler } from '../middleware/errorMiddleware.js';
+const dotenv = require('dotenv');
+const express = require('express');
+const cors = require('cors');
+const serverless = require('serverless-http');
+const connectDB = require('../config/db');
+const { notFound, errorHandler } = require('../middleware/errorMiddleware');
 
 dotenv.config();
 
-export const config = {
-  maxDuration: 300,
-};
-
 const app = express();
 
-await connectDB(); // use `await` if using ESM + top-level await
+connectDB();
 
 app.use(express.json());
 
@@ -25,17 +21,19 @@ app.use(
   })
 );
 
+// 👇 Skip favicon
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
+// 👇 OPTIONS fix
 app.options('*', cors());
 
-app.use('/api/users', (await import('../routes/authRoutes.js')).default);
-app.use('/api/products', (await import('../routes/productRoutes.js')).default);
-app.use('/api/orders', (await import('../routes/orderRoutes.js')).default);
+app.use('/api/users', require('../routes/authRoutes'));
+app.use('/api/products', require('../routes/productRoutes'));
+app.use('/api/orders', require('../routes/orderRoutes'));
 
 app.get('/', (req, res) => res.send('API is running...'));
 
 app.use(notFound);
 app.use(errorHandler);
 
-export default serverless(app);
+module.exports = serverless(app);
