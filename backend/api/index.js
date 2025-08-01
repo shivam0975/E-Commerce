@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import serverless from 'serverless-http';
-import connectDB from '../config/db';
-import { notFound, errorHandler } from '../middleware/errorMiddleware';
+import connectDB from '../config/db.js';
+import { notFound, errorHandler } from '../middleware/errorMiddleware.js';
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ export const config = {
 
 const app = express();
 
-connectDB();
+await connectDB(); // use `await` if using ESM + top-level await
 
 app.use(express.json());
 
@@ -25,16 +25,15 @@ app.use(
   })
 );
 
-// 👇 Fix for OPTIONS timeout
 app.options('*', cors());
 
-app.use('/api/users', require('../routes/authRoutes'));
-app.use('/api/products', require('../routes/productRoutes'));
-app.use('/api/orders', require('../routes/orderRoutes'));
+app.use('/api/users', (await import('../routes/authRoutes.js')).default);
+app.use('/api/products', (await import('../routes/productRoutes.js')).default);
+app.use('/api/orders', (await import('../routes/orderRoutes.js')).default);
 
 app.get('/', (req, res) => res.send('API is running...'));
 
 app.use(notFound);
 app.use(errorHandler);
 
-module.exports = serverless(app);
+export default serverless(app);
