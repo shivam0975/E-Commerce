@@ -8,8 +8,6 @@ const { notFound, errorHandler } = require('../middleware/errorMiddleware');
 
 dotenv.config();
 
-// Connect to MongoDB
-connectDB();
 
 const app = express();
 
@@ -40,5 +38,18 @@ app.get('/', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-// Export handler for Vercel serverless function
-module.exports = serverless(app);
+let isConnected = false;
+
+const startApp = async () => {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+    console.log('MongoDB connected');
+  }
+  return serverless(app);
+};
+
+module.exports = async (req, res) => {
+  const handler = await startApp();
+  return handler(req, res);
+};
