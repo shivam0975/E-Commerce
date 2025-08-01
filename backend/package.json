@@ -2,7 +2,6 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "## Description This project is a backend application that manages users, products, and orders. It provides RESTful APIs for authentication, product management, and order processing.",
-  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
