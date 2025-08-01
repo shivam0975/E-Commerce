@@ -25,6 +25,8 @@ app.use(
   })
 );
 
+app.get('/api/ping', (req, res) => res.json({ status: 'ok' }));
+
 app.use('/api/users', require('../routes/authRoutes'));
 app.use('/api/products', require('../routes/productRoutes'));
 app.use('/api/orders', require('../routes/orderRoutes'));
