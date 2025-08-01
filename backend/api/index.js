@@ -25,6 +25,8 @@ app.use(
   })
 );
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.options('*', cors());
 
 app.use('/api/users', (await import('../routes/authRoutes.js')).default);
